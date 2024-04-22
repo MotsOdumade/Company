@@ -7,7 +7,7 @@ const {
       performance_percent_request,
       deadlines_met_request,
       top_employees_request,
-      top_teams_request
+      top_projects_request
 } = require('./helpers');
 
 const express = require('express');
@@ -96,7 +96,7 @@ app.get('/v1/company-analytics', (req, res) => {
                   responseObj['suggested-title'] = topEmployeesObj['title'];
                   responseObj['analytics-data'] = topEmployeesObj['sampleData'];
                   break;
-            case "top-teams":
+            case "top-projects":
                     // a bar chart showing the task status breakdown for the top 3 projects
                     const topTeamsObj = top_teams_request();
                     responseObj['suggested-title'] = topTeamsObj['title'];
