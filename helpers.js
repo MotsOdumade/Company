@@ -14,7 +14,7 @@ const dataChartDict = {
       'performance-percent': 'stat',
       'deadlines-met': 'progress bar',
       'top-employees': 'stacked bar',
-      'top teams': 'stacked bar'
+      'top-projects': 'stacked bar'
 };
 
 
@@ -101,42 +101,8 @@ function data_to_chart(data_requested){
 
 // ---- functions to execute requests
 
-function task_status_request(dataAbout, targetId, when){
-  const title = 'Status of Current Tasks';
-  let sampleData = [];
-  // query the database
-  
-  sampleData = [
-    ['Complete', 3],
-    ['In Progress', 1],
-    ['Not Started', 2]
-  ];
-  
-  return {'title': title, 'sampleData': sampleData};
-}
-
-
-function num_projects_request(dataAbout, targetId, when){
-  const title = 'Number of Current Projects';
-  let sampleData = 0;
-  // query the database
-  
-  sampleData = 4;
-  return {'title': title, 'sampleData': sampleData};
-}
-
-function deadlines_met_request(dataAbout, targetId, when){
-  const title = 'Number of Deadlines Met';
-  let sampleData = [
-    ['Deadlines Met', 5],
-    ['Total Tasks', 6]
-  ];
-  // could instead use a json format depending on output required for frontend
-  return {'title': title, 'sampleData': sampleData};
-}
-
-function weekly_completion_request(dataAbout, targetId, when){
-  const title = 'Weighted Task Completion this Week';
+function performance_graph_request(){
+  const title = 'Weekly Performance';
   let sampleData = [
         [new Date(2014, 0, 1),  5.7], // represents jan 1st 2014
         [new Date(2014, 0, 2),  8.7],
@@ -146,8 +112,73 @@ function weekly_completion_request(dataAbout, targetId, when){
         [new Date(2014, 0, 6), 20.9],
         [new Date(2014, 0, 7), 19.8]
       ];
+  return {'title': title, 'sampleData': sampleData}; 
+}
+
+function performance_percent_request(){
+  const title = '% Change in Performance Compared to Last Week';
+  let sampleData = 0;
+  // query the database
+
+  sampleData = 30;
+  return {'title': title, 'sampleData': sampleData};
+}
+
+function deadlines_met_request(){
+  // as a progress bar
+  const title = 'Number of Deadlines Met';
+  let sampleData = [
+    ['Deadlines Met', 65],
+    ['Total Tasks', 71]
+  ];
+  // could instead use a json format depending on output required for frontend
+  return {'title': title, 'sampleData': sampleData};
+}
+
+function top_projects_request(){
+  const title = 'Status of Tasks for the Top 3 Performing Projects';
+  let sampleData = [];
+  // query the database
+  
+  sampleData = [
+    ['Status', 'Project1', 'Project2', 'Project3'],
+    ['Complete', 28, 28, 22],
+    ['In Progress', 5, 4, 4],
+    ['Not Started', 10, 11, 7]
+  ];
+  
   return {'title': title, 'sampleData': sampleData};
 }
 
 
-module.exports = {valid_request, authorised, data_to_chart, task_status_request, num_projects_request, deadlines_met_request, weekly_completion_request};
+function top_employees_request(){
+  const title = 'Status of Tasks for the Top 3 Performing Employees';
+  let sampleData = [];
+  // query the database
+  
+  sampleData = [
+    ['Status', 'Adam', 'Ben', 'Clara'],
+    ['Complete', 7, 7, 5],
+    ['In Progress', 5, 4, 4],
+    ['Not Started', 10, 11, 7]
+  ];
+  
+  return {'title': title, 'sampleData': sampleData};
+}
+
+
+
+
+
+
+
+module.exports = {
+      valid_request,
+      authorised,
+      data_to_chart,
+      performance_graph_request,
+      performance_percent_request,
+      deadlines_met_request,
+      top_employees_request,
+      top_projects_request
+};
