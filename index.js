@@ -98,7 +98,7 @@ app.get('/v1/company-analytics', (req, res) => {
                   break;
             case "top-projects":
                     // a bar chart showing the task status breakdown for the top 3 projects
-                    const topTeamsObj = top_teams_request();
+                    const topTeamsObj = top_projects_request();
                     responseObj['suggested-title'] = topTeamsObj['title'];
                     responseObj['analytics-data'] = topTeamsObj['sampleData'];
                     break;
