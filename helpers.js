@@ -66,9 +66,10 @@ function authorised(client_token, user_id) {
                 connection.end(); // Close the connection if there's an error
                 return false; 
             }
-            console.log('Query results:', results);
+            //console.log('Query results:', results);
             // Check if the query returned any rows
             if (results.length > 0) {
+                /*
                 // Access specific data within the response
                 results.forEach(row => {
                     console.log('Token ID:', row.tokenID);
@@ -76,6 +77,7 @@ function authorised(client_token, user_id) {
                     console.log('Time Generated:', row.timeGenerated);
                     // Access other fields as needed
                 });
+                */
             } else {
                 console.log('Query returned no rows.');
             }
