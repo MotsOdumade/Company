@@ -9,7 +9,7 @@ const dataChartDict = {
       'top-projects': 'stacked bar'
 };
 
-function connect_to_db(sql_query){
+function execute_sql_query(sql_query){
   // Create a connection to the database using environment variables
     const connection = mysql.createConnection({
         host: process.env.DB_HOST,
@@ -33,21 +33,19 @@ function connect_to_db(sql_query){
                 return false; 
             }
             // access result
-            let result_output = [];
-            if (results.length > 0) {
-                results.forEach(row => {
-                    console.log(row);
-                });
-                
-            } else {
-                console.log("no rows returned", result_output);
-                  return result_output;
-            }
+              
+            // Map each row to a plain JavaScript object
+            const formattedResults = results.map(row => {
+                  
+                const formattedRow = {};
+                for (const key in row) {
+                  formattedRow[key] = row[key];
+                }
+                return formattedRow;
+              });
 
             // Close the connection when done
             connection.end();
-          // ---- ALWAYS RETURNS TRUE!
-            return true; // return inside the query callback
         });
     });
 }
