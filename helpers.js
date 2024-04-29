@@ -1,14 +1,6 @@
 const mysql = require('mysql');
 require('dotenv').config();
 
-// Create a connection to the database using environment variables
-const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE
-});
-
 const dataChartDict = {
       'performance-graph': 'line',
       'performance-percent': 'stat',
@@ -17,24 +9,8 @@ const dataChartDict = {
       'top-projects': 'stacked bar'
 };
 
-
-
-
-function valid_request(data_requested, access_code){
-      // check if the request is missing necessary information
-  if (Object.keys(dataChartDict).includes(data_requested) === false){
-        return false;
-  }
-  if (access_code == ''){
-        return false;
-  }
-  return true;
-}
-
-
-
-function authorised(access_code) {
-    // Create a connection to the database using environment variables
+function connect_to_db(){
+  // Create a connection to the database using environment variables
     const connection = mysql.createConnection({
         host: process.env.DB_HOST,
         user: process.env.DB_USERNAME,
@@ -80,8 +56,31 @@ function authorised(access_code) {
             return true; // return inside the query callback
         });
     });
-   
-  
+}
+
+
+function valid_request(data_requested, access_code){
+      // check if the request is missing necessary information
+  if (Object.keys(dataChartDict).includes(data_requested) === false){
+        return false;
+  }
+  if (access_code == ''){
+        return false;
+  }
+  return true;
+}
+
+
+
+function authorised(access_code) {
+    // verify the access code provided
+    if (access_code == process.env.ACCESS_CODE){
+      // correct access code for company-analytics code 
+      return true;
+    } 
+    // else incorrect access_code 
+    return false;
+    
 }
 
 
