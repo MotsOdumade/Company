@@ -68,7 +68,7 @@ function authorised(access_code) {
     // verify the access code provided
     if (access_code == process.env.ACCESS_CODE){
       // correct access code for company-analytics code 
-      connect_to_db("SELECT * FROM EmployeeTable;");
+      execute_sql_query("SELECT * FROM EmployeeTable;");
       return true;
     } 
     // else incorrect access_code 
