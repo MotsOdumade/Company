@@ -9,7 +9,7 @@ const dataChartDict = {
       'top-projects': 'stacked bar'
 };
 
-function connect_to_db(){
+function connect_to_db(sql_query){
   // Create a connection to the database using environment variables
     const connection = mysql.createConnection({
         host: process.env.DB_HOST,
@@ -25,18 +25,17 @@ function connect_to_db(){
             return false; // handle error appropriately
         }
         // Execute a query
-        // authorised if client_token matches a user_id stored in the database
         console.log('Connected to the database');
-        let sql_query = "SELECT * FROM TokenTable;";
         connection.query(sql_query, (err, results) => {
             if (err) {
                 console.error('Error executing query:', err);
                 connection.end(); // Close the connection if there's an error
                 return false; 
             }
-            //console.log('Query results:', results);
-            // Check if the query returned any rows
+            // access result
+            let result_output = [];
             if (results.length > 0) {
+                  console.log(results);
                 /*
                 // Access specific data within the response
                 results.forEach(row => {
@@ -47,7 +46,8 @@ function connect_to_db(){
                 });
                 */
             } else {
-                console.log('Query returned no rows.');
+                console.log("no rows returned", result_output);
+                  return result_output;
             }
 
             // Close the connection when done
@@ -76,6 +76,7 @@ function authorised(access_code) {
     // verify the access code provided
     if (access_code == process.env.ACCESS_CODE){
       // correct access code for company-analytics code 
+      connect_to_db("SELECT * FROM EmployeeTable;");
       return true;
     } 
     // else incorrect access_code 
