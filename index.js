@@ -28,7 +28,6 @@ app.get('/v1/company-analytics', (req, res) => {
        // clean query parameters
         const dataRequested = (req.query.data || '').trim().replace(/<[^>]*>/g, '');
         const accessCode = (req.query['access-code'] || '').trim().replace(/<[^>]*>/g, '');
-        const userId = (req.query['user-id'] || '').trim().replace(/<[^>]*>/g, ''); // id of the user requesting the data (for additional security)
         // const when = (req.query.when || '').trim().replace(/<[^>]*>/g, '');
 
       // prepare the response object
@@ -45,7 +44,7 @@ app.get('/v1/company-analytics', (req, res) => {
 
 
       // check validity (completeness) of request 
-      if (valid_request(dataRequested, accessCode, userId) === false){
+      if (valid_request(dataRequested, accessCode) === false){
             // request missing necessary data
             return res.json(responseObj);
       } else {
@@ -58,8 +57,8 @@ app.get('/v1/company-analytics', (req, res) => {
 
 
       // check authorisation
-      if (authorised(accessCode, userId) === false){
-            // 
+      if (authorised(accessCode) === false){
+            // unauthorised - the access-code given was wrong
             return res.json(responseObj);
       } else {
             responseObj['authorised'] = true;
