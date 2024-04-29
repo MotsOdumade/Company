@@ -27,10 +27,8 @@ app.get('/v1/company-analytics', (req, res) => {
       
        // clean query parameters
         const dataRequested = (req.query.data || '').trim().replace(/<[^>]*>/g, '');
-        const clientToken = (req.query['client-token'] || '').trim().replace(/<[^>]*>/g, '');
+        const accessCode = (req.query['access-code'] || '').trim().replace(/<[^>]*>/g, '');
         const userId = (req.query['user-id'] || '').trim().replace(/<[^>]*>/g, ''); // id of the user requesting the data (for additional security)
-        // const dataAbout = (req.query['data-about'] || '').trim().replace(/<[^>]*>/g, '');
-        // const targetId = (req.query['target-id'] || '').trim().replace(/<[^>]*>/g, '');
         // const when = (req.query.when || '').trim().replace(/<[^>]*>/g, '');
 
       // prepare the response object
@@ -47,7 +45,7 @@ app.get('/v1/company-analytics', (req, res) => {
 
 
       // check validity (completeness) of request 
-      if (valid_request(dataRequested, clientToken, userId) === false){
+      if (valid_request(dataRequested, accessCode, userId) === false){
             // request missing necessary data
             return res.json(responseObj);
       } else {
@@ -60,7 +58,7 @@ app.get('/v1/company-analytics', (req, res) => {
 
 
       // check authorisation
-      if (authorised(clientToken, userId) === false){
+      if (authorised(accessCode, userId) === false){
             // 
             return res.json(responseObj);
       } else {
