@@ -49,6 +49,7 @@ function execute_sql_query(sql_query){
 
               // Close the connection
               connection.end();
+              return formattedResults;
             });
     });
 }
