@@ -20,7 +20,7 @@ const dataChartDict = {
 
 
 
-function valid_request(data_requested, access_code, user_id){
+function valid_request(data_requested, access_code){
       // check if the request is missing necessary information
   if (Object.keys(dataChartDict).includes(data_requested) === false){
         return false;
@@ -28,20 +28,12 @@ function valid_request(data_requested, access_code, user_id){
   if (access_code == ''){
         return false;
   }
-  if (user_id == ''){
-        return false;
-  }
-  
-  if (isNaN(user_id)){
-        // it's not a number
-        return false;
-  }
   return true;
 }
 
 
 
-function authorised(access_code, user_id) {
+function authorised(access_code) {
     // Create a connection to the database using environment variables
     const connection = mysql.createConnection({
         host: process.env.DB_HOST,
