@@ -41,6 +41,7 @@ function execute_sql_query(sql_query){
                 for (const key in row) {
                   formattedRow[key] = row[key];
                 }
+                console.log(formattedRow);
                 return formattedRow;
               });
 
