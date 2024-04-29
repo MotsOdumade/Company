@@ -35,16 +35,10 @@ function connect_to_db(sql_query){
             // access result
             let result_output = [];
             if (results.length > 0) {
-                  console.log(results);
-                /*
-                // Access specific data within the response
                 results.forEach(row => {
-                    console.log('Token ID:', row.tokenID);
-                    console.log('Employee ID:', row.employeeID);
-                    console.log('Time Generated:', row.timeGenerated);
-                    // Access other fields as needed
+                    console.log(row);
                 });
-                */
+                
             } else {
                 console.log("no rows returned", result_output);
                   return result_output;
