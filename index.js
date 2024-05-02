@@ -23,7 +23,7 @@ const HTTP_PORT = 3003;
 // Define your Express routes here
 // ------ handle GET requests to /v1/company-analytics -----------------------
 
-app.get('/v1/company-analytics', (req, res) => {
+app.get('/v1.1/data-analytics/company-analytics', (req, res) => {
       
        // clean query parameters
         const dataRequested = (req.query.data || '').trim().replace(/<[^>]*>/g, '');
