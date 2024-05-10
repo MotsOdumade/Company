@@ -161,47 +161,51 @@ function top_employees_request(){
 function weekly_completion_request(){
       const title = 'Task Weight Completion by Week';
       const data = {
-          labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"],
-          datasets: [{
-            label: "Task Weight Completed",
-            data: [20, 40, 60, 80, 100], // Sample completion percentages for each week
-            borderColor: "blue",
-            fill: false
-          }]
-        };
-      let sampleData = {
-          type: 'line',
-          data: data,
-          options: {
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: 'Task Weight Completion by Week'
-              }
-            },
-            scales: {
-              x: {
-                title: {
-                  display: true,
-                  text: 'Weeks'
-                }
-              },
-              y: {
-                title: {
-                  display: true,
-                  text: 'Completion Percentage'
-                },
-                min: 0,
-                max: 100,
-                ticks: {
-                  stepSize: 10
-                }
-              }
-            }
+    labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"],
+    datasets: [{
+      label: "Task Weight Completed",
+      data: [20, 40, 60, 80, 100], // Sample completion percentages for each week
+      borderColor: "blue",
+      fill: false
+    }]
+  };
+
+  // Configuration for the chart
+  const config = {
+    type: 'line',
+    data: data,
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Task Weight Completion by Week'
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Weeks'
           }
-      };
-      return {'title': title, 'sampleData': sampleData};
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Completion Percentage'
+          },
+          min: 0,
+          max: 100,
+          ticks: {
+            stepSize: 10
+          }
+        }
+      }
+    },
+  };
+
+
+      return {'title': title, 'sampleData': config};
 }
 
 
