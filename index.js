@@ -7,7 +7,8 @@ const {
       performance_percent_request,
       deadlines_met_request,
       top_employees_request,
-      top_projects_request
+      top_projects_request,
+      weekly_completion_request
 } = require('./helpers');
 
 const express = require('express');
@@ -99,7 +100,12 @@ app.get('/v1.1/data-analytics/company-analytics', (req, res) => {
                     responseObj['suggested-title'] = topTeamsObj['title'];
                     responseObj['analytics-data'] = topTeamsObj['sampleData'];
                     break;
-        
+            case "weekly-completion":
+                    // a line chart showing the weekly task completion across the whole company for the past 5 weeks
+                    const weeklyCompletionObj = top_projects_request();
+                    responseObj['suggested-title'] = weeklyCompletionObj['title'];
+                    responseObj['analytics-data'] = weeklyCompletionObj['sampleData'];
+                    break;
   
         default:
                   // indicates a request option that hasn't yet been implemented
