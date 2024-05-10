@@ -6,7 +6,8 @@ const dataChartDict = {
       'performance-percent': 'stat',
       'deadlines-met': 'progress bar',
       'top-employees': 'stacked bar',
-      'top-projects': 'stacked bar'
+      'top-projects': 'stacked bar',
+      'weekly-completion': 'line'
 };
 
 function execute_sql_query(sql_query){
@@ -157,7 +158,50 @@ function top_employees_request(){
 }
 
 
-
+function weekly_completion_request(){
+      const title = 'Task Weight Completion by Week';
+      const data = {
+          labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"],
+          datasets: [{
+            label: "Task Weight Completed",
+            data: [20, 40, 60, 80, 100], // Sample completion percentages for each week
+            borderColor: "blue",
+            fill: false
+          }]
+        };
+      let sampleData = {
+          type: 'line',
+          data: data,
+          options: {
+            responsive: true,
+            plugins: {
+              title: {
+                display: true,
+                text: 'Task Weight Completion by Week'
+              }
+            },
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: 'Weeks'
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: 'Completion Percentage'
+                },
+                min: 0,
+                max: 100,
+                ticks: {
+                  stepSize: 10
+                }
+              }
+            }
+          },;
+      return {'title': title, 'sampleData': sampleData};
+}
 
 
 
@@ -170,5 +214,6 @@ module.exports = {
       performance_percent_request,
       deadlines_met_request,
       top_employees_request,
-      top_projects_request
+      top_projects_request, 
+      weekly_completion_request
 };
