@@ -102,7 +102,7 @@ app.get('/v1.1/data-analytics/company-analytics', (req, res) => {
                     break;
             case "weekly-completion":
                     // a line chart showing the weekly task completion across the whole company for the past 5 weeks
-                    const weeklyCompletionObj = top_projects_request();
+                    const weeklyCompletionObj = weekly_completion_request();
                     responseObj['suggested-title'] = weeklyCompletionObj['title'];
                     responseObj['analytics-data'] = weeklyCompletionObj['sampleData'];
                     break;
