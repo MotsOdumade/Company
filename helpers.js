@@ -199,7 +199,8 @@ function weekly_completion_request(){
                 }
               }
             }
-          };
+          }
+      };
       return {'title': title, 'sampleData': sampleData};
 }
 
