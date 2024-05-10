@@ -111,7 +111,7 @@ function performance_percent_request(){
   let sampleData = 0;
   // query the database
 
-  sampleData = 30;
+  sampleData = 25;
   return {'title': title, 'sampleData': sampleData};
 }
 
