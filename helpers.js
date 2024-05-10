@@ -145,16 +145,59 @@ function top_projects_request(){
 function top_employees_request(){
   const title = 'Status of Tasks for the Top 3 Performing Employees';
   let sampleData = [];
-  // query the database
+  const company_data = {
+    labels: ["Employee 1", "Employee 2", "Employee 3"],
+    datasets: [{
+      label: "Complete",
+      data: [85, 70, 43], // Sample complete task weights
+      backgroundColor: "green",
+      barThickness: 30
+    }, {
+      label: "In Progress",
+      data: [10, 23, 12], // Sample in progress task weights
+      backgroundColor: "orange",
+      barThickness: 30
+    }, {
+      label: "Not Started",
+      data: [10, 20, 10], // Sample not started task weights
+      backgroundColor: "red",
+      barThickness: 30
+    }]
+  };
+
+  // Configuration for the chart
+  const configure = {
+    type: 'bar',
+    data: company_data,
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Top Three Employees Task Breakdown'
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          title: {
+            display: true,
+            text: 'Employees'
+          }
+        },
+        y: {
+          stacked: true,
+          title: {
+            display: true,
+            text: 'Task Weight'
+          },
+          min: 0
+        }
+      }
+    }
+  };
   
-  sampleData = [
-    ['Status', 'Adam', 'Ben', 'Clara'],
-    ['Complete', 7, 7, 5],
-    ['In Progress', 5, 4, 4],
-    ['Not Started', 10, 11, 7]
-  ];
-  
-  return {'title': title, 'sampleData': sampleData};
+  return {'title': title, 'sampleData': configure};
 }
 
 
