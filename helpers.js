@@ -104,38 +104,39 @@ function performance_graph_request(){
   return {'title': title, 'sampleData': sampleData}; 
 }
 
-async function performance_percent_request(){
-  const title = '% Change in Performance Compared to Last Week';
-  let sampleData = 25;
-  // sql query here, e.g.
-      
-  let sql_query = `SELECT 
-          CASE 
-              WHEN previous_month_count = 0 THEN NULL -- Handle division by zero
-              ELSE ((current_month_count - previous_month_count) / previous_month_count) * 100
-          END AS percentage_increase
-      FROM (
-          SELECT 
-              SUM(CASE WHEN YEAR(complete_date) = YEAR(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s')) AND MONTH(complete_date) = MONTH(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s')) THEN 1 ELSE 0 END) AS current_month_count,
-              SUM(CASE WHEN YEAR(complete_date) = YEAR(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') - INTERVAL 1 MONTH) AND MONTH(complete_date) = MONTH(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') - INTERVAL 1 MONTH) THEN 1 ELSE 0 END) AS previous_month_count
-          FROM task_complete
-          WHERE 
-              (YEAR(complete_date) = YEAR(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s')) AND MONTH(complete_date) = MONTH(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s'))) OR
-              (YEAR(complete_date) = YEAR(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') - INTERVAL 1 MONTH) AND MONTH(complete_date) = MONTH(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') - INTERVAL 1 MONTH))
-      ) AS counts;`;   
-      console.log("company analytics sql query: ", sql_query );
-  try {
-    // query the database
-    let queryData = await execute_sql_query(sql_query);
-    console.log("Query data:", queryData); // Log the query data
-    if (queryData && queryData.length > 0){
-        sampleData = queryData[0]["percentage_increase"];
-    } 
-    return {'title': title, 'sampleData': sampleData};
+async function performance_percent_request() {
+    const title = '% Change in Performance Compared to Last Week';
+    let sampleData = 25;
+
+    let sql_query = `SELECT 
+            CASE 
+                WHEN previous_month_count = 0 THEN NULL -- Handle division by zero
+                ELSE ((current_month_count - previous_month_count) / previous_month_count) * 100
+            END AS percentage_increase
+        FROM (
+            SELECT 
+                SUM(CASE WHEN YEAR(complete_date) = YEAR(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s')) AND MONTH(complete_date) = MONTH(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s')) THEN 1 ELSE 0 END) AS current_month_count,
+                SUM(CASE WHEN YEAR(complete_date) = YEAR(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') - INTERVAL 1 MONTH) AND MONTH(complete_date) = MONTH(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') - INTERVAL 1 MONTH) THEN 1 ELSE 0 END) AS previous_month_count
+            FROM task_complete
+            WHERE 
+                (YEAR(complete_date) = YEAR(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s')) AND MONTH(complete_date) = MONTH(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s'))) OR
+                (YEAR(complete_date) = YEAR(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') - INTERVAL 1 MONTH) AND MONTH(complete_date) = MONTH(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') - INTERVAL 1 MONTH))
+        ) AS counts;`;   
+    console.log("company analytics sql query: ", sql_query );
+
+    try {
+        // query the database
+        let queryData = await execute_sql_query(sql_query);
+        console.log("Query data:", queryData); // Log the query data
+        if (queryData && queryData.length > 0) {
+            sampleData = queryData[0]["percentage_increase"];
+        } 
+        console.log("Sample data:", sampleData); // Log the updated sampleData value
+        return {'title': title, 'sampleData': sampleData};
     } catch (error) {
-          console.error('Error executing SQL query:', error);
-          // Handle the error here
-     }
+        console.error('Error executing SQL query:', error);
+        // Handle the error here
+    }
 }
 
 async function deadlines_met_request(targetId){
