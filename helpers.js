@@ -109,7 +109,9 @@ async function performance_percent_request(){
   const title = '% Change in Performance Compared to Last Week';
   let sampleData = 25;
   // sql query here, e.g.
+      
   let sql_query = `SELECT * FROM user ;`; 
+      
   try {
     // query the database
     let queryData = await execute_sql_query(sql_query);
@@ -119,13 +121,11 @@ async function performance_percent_request(){
     //sampleData = queryData;
     //console.log("performance_percent has waited for sql query and got back this many rows", queryData.length);
     return {'title': title, 'sampleData': sampleData};
+ 
   } catch (error) {
     console.error('Error executing SQL query:', error);
     // Handle the error here
   }
-  
-
-  
   return {'title': title, 'sampleData': sampleData};
 }
 
