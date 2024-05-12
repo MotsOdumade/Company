@@ -110,194 +110,128 @@ async function performance_percent_request(){
   let sampleData = 25;
   // sql query here, e.g.
       
-  let sql_query = `SELECT * FROM user ;`; 
+  let sql_query = `SELECT ((current_month_count - previous_month_count) / previous_month_count) * 100 AS percentage_increase
+    FROM (
+        SELECT 
+            SUM(CASE WHEN YEAR(complete_date) = YEAR(NOW()) AND MONTH(complete_date) = MONTH(NOW()) THEN 1 ELSE 0 END) AS current_month_count,
+            SUM(CASE WHEN YEAR(complete_date) = YEAR(NOW()) - 1 AND MONTH(complete_date) = MONTH(NOW()) - 1 THEN 1 ELSE 0 END) AS previous_month_count
+        FROM task_complete
+        WHERE 
+            (YEAR(complete_date) = YEAR(NOW()) AND MONTH(complete_date) = MONTH(NOW())) OR
+            (YEAR(complete_date) = YEAR(NOW()) - 1 AND MONTH(complete_date) = MONTH(NOW()) - 1)
+    ) AS counts;`; 
       
   try {
     // query the database
     let queryData = await execute_sql_query(sql_query);
-    // queryData is a list of associative arrays
-    // process the results
-    // update sampleData
-    //sampleData = queryData;
-    //console.log("performance_percent has waited for sql query and got back this many rows", queryData.length);
+    if (queryData.length > 0){
+      sampleData = queryData[0]["percentage_increase"];
+    } 
     return {'title': title, 'sampleData': sampleData};
- 
   } catch (error) {
     console.error('Error executing SQL query:', error);
     // Handle the error here
   }
-  return {'title': title, 'sampleData': sampleData};
 }
 
-function deadlines_met_request(){
-  // as a progress bar
-  const title = 'Number of Deadlines Met';
-  let sampleData = [
-    ['Deadlines Met', 65],
-    ['Total Tasks', 71]
-  ];
-  // could instead use a json format depending on output required for frontend
-  return {'title': title, 'sampleData': sampleData};
-}
-
-function top_projects_request(){
-  const title = 'Status of Tasks for the Top 3 Performing Projects';
-  let sampleData = [];
-
-  
-  sampleData = [
-    ['Status', 'Project1', 'Project2', 'Project3'],
-    ['Complete', 28, 28, 22],
-    ['In Progress', 5, 4, 4],
-    ['Not Started', 10, 11, 7]
-  ];
-  
-  return {'title': title, 'sampleData': sampleData};
+async function deadlines_met_request(targetId){
+  const title = 'Deadlines Met and Not Met';
+  let sql_query_met = `SELECT COUNT(*) AS DeadlinesMet
+        FROM task
+              INNER JOIN task_complete ON task.id = task_complete.task_id
+                    WHERE task_complete.complete_date <= task.deadline AND task.deadline >= DATE_SUB('2024-05-17 13:42:04', INTERVAL 7 DAY);`;
+  let sql_query_not_met = `SELECT COUNT(*) AS DeadlinesNotMet
+        FROM task
+              LEFT JOIN task_complete ON task.id = task_complete.task_id
+                    WHERE (task_complete.complete_date > task.deadline OR task_complete.complete_date IS NULL) AND task.deadline >= DATE_SUB('2024-05-17 13:42:04', INTERVAL 7 DAY);`;
+  let deadlinesMet = 0;
+  let deadlinesNotMet = 0;
+  try {
+    // query the database
+    let queryDataMet = await execute_sql_query(sql_query_met);
+    if (queryDataMet.length > 0){
+      deadlinesMet = queryDataMet[0]["DeadlinesMet"];
+    } 
+    let queryDataNotMet = await execute_sql_query(sql_query_not_met);
+    if (queryDataNotMet.length > 0){
+      deadlinesNotMet = queryDataNotMet[0]["DeadlinesNotMet"];
+    } 
+    console.log("deadlines_met_request has waited for sql queries and got back this many rows", queryDataMet.length + queryDataNotMet.length);
+    return {'title': title, 'sampleData': [['Deadlines Met', deadlinesMet], ['Deadlines Not Met', deadlinesNotMet]]};
+  } catch (error) {
+    console.error('Error executing SQL queries:', error);
+    // Handle the error here
+  }
 }
 
 
 async function top_employees_request(){
-// replace company_data["labels"] with the names of the top 3 employees
-// replace company_data["datasets"][0]["data"] with a list of completed task weights for each employee
-// replace company_data["datasets"][1]["data"] with a list of in-progress task weights for each employee
-// replace company_data["datasets"][2]["data"] with a list of not started task weights for each employee
-  const title = 'Status of Tasks for the Top 3 Performing Employees';
-// sql query e.g.
-let sql_query = 'SELECT * FROM user;';
-
+  const title = 'Top Employees';
+  let sql_query = `SELECT assigned_user_id, SUM(weight) AS total_weight
+        FROM task_complete
+              JOIN task ON task_complete.task_id = task.id
+                    WHERE complete_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH)
+                          GROUP BY assigned_user_id
+                                ORDER BY total_weight DESC
+                                      LIMIT 3;`;
   let sampleData = [];
-  const company_data = {
-    labels: ["Employee 1", "Employee 2", "Employee 3"],
-    datasets: [{
-      label: "Complete",
-      data: [85, 70, 43], // Sample complete task weights
-      backgroundColor: "green",
-      barThickness: 30
-    }, {
-      label: "In Progress",
-      data: [10, 23, 12], // Sample in progress task weights
-      backgroundColor: "orange",
-      barThickness: 30
-    }, {
-      label: "Not Started",
-      data: [10, 20, 10], // Sample not started task weights
-      backgroundColor: "red",
-      barThickness: 30
-    }]
-  };
-
-  // Configuration for the chart
-  const configure = {
-    type: 'bar',
-    data: company_data,
-    options: {
-      responsive: true,
-      plugins: {
-        title: {
-          display: true,
-          text: 'Top Three Employees Task Breakdown'
-        }
-      },
-      scales: {
-        x: {
-          stacked: true,
-          title: {
-            display: true,
-            text: 'Employees'
-          }
-        },
-        y: {
-          stacked: true,
-          title: {
-            display: true,
-            text: 'Task Weight'
-          },
-          min: 0
-        }
-      }
-    }
-  };
   try {
     // query the database
     let queryData = await execute_sql_query(sql_query);
-    // queryData is a list of associative arrays
-    // process the results
-    // update configure
-    //sampleData = queryData;
-    //console.log("top employees has waited for sql query and got back this many rows", queryData.length);
-    return {'title': title, 'sampleData': configure};
+    if (queryData.length > 0){
+      sampleData = queryData.map(row => ['User ' + row["assigned_user_id"], row["total_weight"]]);
+    } 
+    console.log("top_employees_request has waited for sql query and got back this many rows", queryData.length);
+    return {'title': title, 'sampleData': sampleData};
   } catch (error) {
     console.error('Error executing SQL query:', error);
     // Handle the error here
   }
-  
 }
 
 
 async function weekly_completion_request(){
-      const title = 'Task Weight Completion by Week';
-      // replace data["datasets"]["data"] with the completion percentages for each week
-      let sql_query = `SELECT * FROM user;`;
-      const data = {
-    labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"],
-    datasets: [{
-      label: "Task Weight Completed",
-      data: [20, 40, 60, 80, 100], // Sample completion percentages for each week
-      borderColor: "blue",
-      fill: false
-    }]
-  };
-
-  // Configuration for the chart
-  const config = {
-    type: 'line',
-    data: data,
-    options: {
-      responsive: true,
-      plugins: {
-        title: {
-          display: true,
-          text: 'Task Weight Completion by Week'
-        }
-      },
-      scales: {
-        x: {
-          title: {
-            display: true,
-            text: 'Weeks'
-          }
-        },
-        y: {
-          title: {
-            display: true,
-            text: 'Completion Percentage'
-          },
-          min: 0,
-          max: 100,
-          ticks: {
-            stepSize: 10
-          }
-        }
-      }
-    },
-  };
-      try {
-          // query the database
-          let queryData = await execute_sql_query(sql_query);
-          // queryData is a list of associative arrays
-          // process the results
-          // edit config
-          //sampleData = queryData;
-          //console.log("performance_percent has waited for sql query and got back this many rows", queryData.length);
-          return {'title': title, 'sampleData': config};
-        } catch (error) {
-          console.error('Error executing SQL query:', error);
-          // Handle the error here
-        }
-
-      
+  const title = 'Weekly Completion';
+  let sql_query = `SELECT
+    label.week_label,
+    COALESCE(SUM(t.weight), 0) AS total_weight_completed
+FROM
+    (
+        SELECT '5 weeks ago' AS week_label
+        UNION ALL SELECT '4 weeks ago'
+        UNION ALL SELECT '3 weeks ago'
+        UNION ALL SELECT '2 weeks ago'
+        UNION ALL SELECT 'last week'
+    ) AS label
+LEFT JOIN
+    task_complete tc ON label.week_label = 
+    CASE 
+        WHEN YEARWEEK(tc.complete_date) = YEARWEEK(DATE_SUB(CURDATE(), INTERVAL 5 WEEK)) THEN '5 weeks ago'
+        WHEN YEARWEEK(tc.complete_date) = YEARWEEK(DATE_SUB(CURDATE(), INTERVAL 4 WEEK)) THEN '4 weeks ago'
+        WHEN YEARWEEK(tc.complete_date) = YEARWEEK(DATE_SUB(CURDATE(), INTERVAL 3 WEEK)) THEN '3 weeks ago'
+        WHEN YEARWEEK(tc.complete_date) = YEARWEEK(DATE_SUB(CURDATE(), INTERVAL 2 WEEK)) THEN '2 weeks ago'
+        WHEN YEARWEEK(tc.complete_date) = YEARWEEK(DATE_SUB(CURDATE(), INTERVAL 1 WEEK)) THEN 'last week'
+    END
+LEFT JOIN
+    task t ON tc.task_id = t.id
+GROUP BY
+    label.week_label
+ORDER BY
+    FIELD(label.week_label, '5 weeks ago', '4 weeks ago', '3 weeks ago', '2 weeks ago', 'last week');`;
+  let sampleData = [];
+  try {
+    // query the database
+    let queryData = await execute_sql_query(sql_query);
+    if (queryData.length > 0){
+      sampleData = queryData.map(row => [row["week_label"], row["total_weight_completed"]]);
+    } 
+    console.log("weekly_completion_request has waited for sql query and got back this many rows", queryData.length);
+    return {'title': title, 'sampleData': sampleData};
+  } catch (error) {
+    console.error('Error executing SQL query:', error);
+    // Handle the error here
+  }
 }
-
 
 
 
