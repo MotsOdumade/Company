@@ -112,12 +112,12 @@ async function performance_percent_request(){
   let sql_query = `SELECT ((current_month_count - previous_month_count) / previous_month_count) * 100 AS percentage_increase
     FROM (
         SELECT 
-            SUM(CASE WHEN YEAR(complete_date) = YEAR(NOW()) AND MONTH(complete_date) = MONTH(NOW()) THEN 1 ELSE 0 END) AS current_month_count,
-            SUM(CASE WHEN YEAR(complete_date) = YEAR(NOW()) - 1 AND MONTH(complete_date) = MONTH(NOW()) - 1 THEN 1 ELSE 0 END) AS previous_month_count
+            SUM(CASE WHEN YEAR(complete_date) = YEAR(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') AND MONTH(complete_date) = MONTH(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s')) THEN 1 ELSE 0 END) AS current_month_count,
+            SUM(CASE WHEN YEAR(complete_date) = YEAR(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s')) - 1 AND MONTH(complete_date) = MONTH(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s')) - 1 THEN 1 ELSE 0 END) AS previous_month_count
         FROM task_complete
         WHERE 
-            (YEAR(complete_date) = YEAR(NOW()) AND MONTH(complete_date) = MONTH(NOW())) OR
-            (YEAR(complete_date) = YEAR(NOW()) - 1 AND MONTH(complete_date) = MONTH(NOW()) - 1)
+            (YEAR(complete_date) = YEAR(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s')) AND MONTH(complete_date) = MONTH()) OR
+            (YEAR(complete_date) = YEAR(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s')) - 1 AND MONTH(complete_date) = MONTH(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s')) - 1)
     ) AS counts;`; 
       
   try {
