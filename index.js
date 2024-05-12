@@ -78,9 +78,17 @@ app.get('/v1.1/data-analytics/company-analytics', (req, res) => {
                   break;
             case "performance-percent":
                   // a stat showing the percentage change in performance compared to last week
-                  const performancePercentObj = performance_percent_request();
-                  responseObj['suggested-title'] = performancePercentObj['title'];
-                  responseObj['analytics-data'] = performancePercentObj['sampleData'];
+                  performance_percent_request(targetId)
+                      .then(performancePercentObj => {
+                          responseObj['suggested-title'] = performancePercentObj['title'];
+                          responseObj['analytics-data'] = performancePercentObj['sampleData'];
+                          res.json(responseObj);
+                      })
+                      .catch(error => {
+                          console.error('Error fetching performance percentage:', error);
+                          // Handle the error here
+                          res.status(500).json({ error: 'Internal server error' });
+                      });
                   break;
             case "deadlines-met":
                   // a progress bar showing the number of deadlines met in the last 7 days
@@ -91,8 +99,17 @@ app.get('/v1.1/data-analytics/company-analytics', (req, res) => {
             case "top-employees":
                   // a bar chart showing the task status breakdown for the top 3 employees
                   const topEmployeesObj = top_employees_request();
-                  responseObj['suggested-title'] = topEmployeesObj['title'];
-                  responseObj['analytics-data'] = topEmployeesObj['sampleData'];
+                  top_employees_request(targetId)
+                      .then(topEmployeesObj => {
+                          responseObj['suggested-title'] = topEmployeesObj['title'];
+                          responseObj['analytics-data'] = topEmployeesObj['sampleData'];
+                          res.json(responseObj);
+                      })
+                      .catch(error => {
+                          console.error('Error fetching top employees:', error);
+                          // Handle the error here
+                          res.status(500).json({ error: 'Internal server error' });
+                      });
                   break;
             case "top-projects":
                     // a bar chart showing the task status breakdown for the top 3 projects
@@ -102,10 +119,18 @@ app.get('/v1.1/data-analytics/company-analytics', (req, res) => {
                     break;
             case "weekly-completion":
                     // a line chart showing the weekly task completion across the whole company for the past 5 weeks
-                    const weeklyCompletionObj = weekly_completion_request();
-                    responseObj['suggested-title'] = weeklyCompletionObj['title'];
-                    responseObj['analytics-data'] = weeklyCompletionObj['sampleData'];
-                    break;
+                    weekly_completion_request(targetId)
+                      .then(weeklyCompletionObj => {
+                          responseObj['suggested-title'] = weeklyCompletionObj['title'];
+                          responseObj['analytics-data'] = weeklyCompletionObj['sampleData'];
+                          res.json(responseObj);
+                      })
+                      .catch(error => {
+                          console.error('Error fetching weekly completion data:', error);
+                          // Handle the error here
+                          res.status(500).json({ error: 'Internal server error' });
+                      });
+                  break;
   
         default:
                   // indicates a request option that hasn't yet been implemented
