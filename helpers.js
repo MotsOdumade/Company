@@ -73,7 +73,6 @@ function authorised(access_code) {
     // verify the access code provided
     if (access_code == process.env.ACCESS_CODE){
       // correct access code for company-analytics code 
-      execute_sql_query("SELECT * FROM EmployeeTable;");
       return true;
     } 
     // else incorrect access_code 
@@ -109,13 +108,14 @@ function performance_graph_request(){
 async function performance_percent_request(){
   const title = '% Change in Performance Compared to Last Week';
   let sampleData = 25;
-  // sql query here
-  let sql_query = ` ;`; 
+  // sql query here, e.g.
+  let sql_query = `SELECT * FROM user ;`; 
   try {
     // query the database
     let queryData = await execute_sql_query(sql_query);
     // queryData is a list of associative arrays
     // process the results
+    // update sampleData
     //sampleData = queryData;
     //console.log("performance_percent has waited for sql query and got back this many rows", queryData.length);
     return {'title': title, 'sampleData': sampleData};
@@ -143,7 +143,7 @@ function deadlines_met_request(){
 function top_projects_request(){
   const title = 'Status of Tasks for the Top 3 Performing Projects';
   let sampleData = [];
-  // query the database
+
   
   sampleData = [
     ['Status', 'Project1', 'Project2', 'Project3'],
@@ -222,6 +222,7 @@ let sql_query = 'SELECT * FROM user;';
     let queryData = await execute_sql_query(sql_query);
     // queryData is a list of associative arrays
     // process the results
+    // update configure
     //sampleData = queryData;
     //console.log("top employees has waited for sql query and got back this many rows", queryData.length);
     return {'title': title, 'sampleData': configure};
@@ -236,6 +237,7 @@ let sql_query = 'SELECT * FROM user;';
 async function weekly_completion_request(){
       const title = 'Task Weight Completion by Week';
       // replace data["datasets"]["data"] with the completion percentages for each week
+      let sql_query = `SELECT * FROM user;`;
       const data = {
     labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"],
     datasets: [{
@@ -284,6 +286,7 @@ async function weekly_completion_request(){
           let queryData = await execute_sql_query(sql_query);
           // queryData is a list of associative arrays
           // process the results
+          // edit config
           //sampleData = queryData;
           //console.log("performance_percent has waited for sql query and got back this many rows", queryData.length);
           return {'title': title, 'sampleData': config};
