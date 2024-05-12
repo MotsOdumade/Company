@@ -7,7 +7,6 @@ const {
       performance_percent_request,
       deadlines_met_request,
       top_employees_request,
-      top_projects_request,
       weekly_completion_request
 } = require('./helpers');
 
@@ -113,13 +112,7 @@ app.get('/v1.1/data-analytics/company-analytics', (req, res) => {
                           res.status(500).json({ error: 'Internal server error' });
                       });
                   break;
-            case "top-projects":
-                    // a bar chart showing the task status breakdown for the top 3 projects
-                    const topTeamsObj = top_projects_request();
-                    responseObj['suggested-title'] = topTeamsObj['title'];
-                    responseObj['analytics-data'] = topTeamsObj['sampleData'];
-                    return res.json(responseObj);
-                    break;
+
             case "weekly-completion":
                     // a line chart showing the weekly task completion across the whole company for the past 5 weeks
                     weekly_completion_request()
