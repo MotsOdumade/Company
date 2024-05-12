@@ -75,6 +75,7 @@ app.get('/v1.1/data-analytics/company-analytics', (req, res) => {
                   const performanceGraphObj = performance_graph_request();
                   responseObj['suggested-title'] = performanceGraphObj['title'];
                   responseObj['analytics-data'] = performanceGraphObj['sampleData'];
+                   return res.json(responseObj);
                   break;
             case "performance-percent":
                   // a stat showing the percentage change in performance compared to last week
@@ -95,6 +96,7 @@ app.get('/v1.1/data-analytics/company-analytics', (req, res) => {
                   const deadlinesMetObj = deadlines_met_request();
                   responseObj['suggested-title'] = deadlinesMetObj['title'];
                   responseObj['analytics-data'] = deadlinesMetObj['sampleData'];
+                  return res.json(responseObj);
                   break;
             case "top-employees":
                   // a bar chart showing the task status breakdown for the top 3 employees
@@ -116,6 +118,7 @@ app.get('/v1.1/data-analytics/company-analytics', (req, res) => {
                     const topTeamsObj = top_projects_request();
                     responseObj['suggested-title'] = topTeamsObj['title'];
                     responseObj['analytics-data'] = topTeamsObj['sampleData'];
+                    return res.json(responseObj);
                     break;
             case "weekly-completion":
                     // a line chart showing the weekly task completion across the whole company for the past 5 weeks
@@ -139,7 +142,7 @@ app.get('/v1.1/data-analytics/company-analytics', (req, res) => {
                   return res.json(responseObj);
       }
       
-        return res.json(responseObj);
+       
 
 });
 
