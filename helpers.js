@@ -120,7 +120,7 @@ FROM (
         (YEAR(complete_date) = YEAR(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s')) - 1 AND MONTH(complete_date) = MONTH(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s')) - 1)
 ) AS counts;
 `; 
-      
+      console.log("company analytics sql query: ", sql_query );
   try {
     // query the database
     let queryData = await execute_sql_query(sql_query);
