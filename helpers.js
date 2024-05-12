@@ -106,12 +106,26 @@ function performance_graph_request(){
   return {'title': title, 'sampleData': sampleData}; 
 }
 
-function performance_percent_request(){
+async function performance_percent_request(){
   const title = '% Change in Performance Compared to Last Week';
-  let sampleData = 0;
-  // query the database
+  let sampleData = 25;
+  // sql query here
+  let sql_query = ` ;`; 
+  try {
+    // query the database
+    let queryData = await execute_sql_query(sql_query);
+    // queryData is a list of associative arrays
+    // process the results
+    //sampleData = queryData;
+    //console.log("performance_percent has waited for sql query and got back this many rows", queryData.length);
+    return {'title': title, 'sampleData': sampleData};
+  } catch (error) {
+    console.error('Error executing SQL query:', error);
+    // Handle the error here
+  }
+  
 
-  sampleData = 25;
+  
   return {'title': title, 'sampleData': sampleData};
 }
 
@@ -142,8 +156,15 @@ function top_projects_request(){
 }
 
 
-function top_employees_request(){
+async function top_employees_request(){
+// replace company_data["labels"] with the names of the top 3 employees
+// replace company_data["datasets"][0]["data"] with a list of completed task weights for each employee
+// replace company_data["datasets"][1]["data"] with a list of in-progress task weights for each employee
+// replace company_data["datasets"][2]["data"] with a list of not started task weights for each employee
   const title = 'Status of Tasks for the Top 3 Performing Employees';
+// sql query e.g.
+let sql_query = 'SELECT * FROM user;';
+
   let sampleData = [];
   const company_data = {
     labels: ["Employee 1", "Employee 2", "Employee 3"],
@@ -196,13 +217,25 @@ function top_employees_request(){
       }
     }
   };
+  try {
+    // query the database
+    let queryData = await execute_sql_query(sql_query);
+    // queryData is a list of associative arrays
+    // process the results
+    //sampleData = queryData;
+    //console.log("top employees has waited for sql query and got back this many rows", queryData.length);
+    return {'title': title, 'sampleData': configure};
+  } catch (error) {
+    console.error('Error executing SQL query:', error);
+    // Handle the error here
+  }
   
-  return {'title': title, 'sampleData': configure};
 }
 
 
-function weekly_completion_request(){
+async function weekly_completion_request(){
       const title = 'Task Weight Completion by Week';
+      // replace data["datasets"]["data"] with the completion percentages for each week
       const data = {
     labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"],
     datasets: [{
@@ -246,9 +279,20 @@ function weekly_completion_request(){
       }
     },
   };
+      try {
+          // query the database
+          let queryData = await execute_sql_query(sql_query);
+          // queryData is a list of associative arrays
+          // process the results
+          //sampleData = queryData;
+          //console.log("performance_percent has waited for sql query and got back this many rows", queryData.length);
+          return {'title': title, 'sampleData': config};
+        } catch (error) {
+          console.error('Error executing SQL query:', error);
+          // Handle the error here
+        }
 
-
-      return {'title': title, 'sampleData': config};
+      
 }
 
 
