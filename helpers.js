@@ -171,22 +171,104 @@ async function deadlines_met_request(targetId){
 
 async function top_employees_request(){
   const title = 'Top Employees';
-  let sql_query = `SELECT assigned_user_id, SUM(weight) AS total_weight
-        FROM task_complete
-              JOIN task ON task_complete.task_id = task.id
-                    WHERE complete_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH)
-                          GROUP BY assigned_user_id
-                                ORDER BY total_weight DESC
-                                      LIMIT 3;`;
-  let sampleData = [];
+  let sql_query = `SELECT u.first_name, t.assigned_user_id, SUM(t.weight) AS total_weight
+        FROM task_complete tc JOIN task t 
+        ON tc.task_id = t.id JOIN user u 
+        ON t.assigned_user_id = u.id 
+        WHERE tc.complete_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH) 
+        GROUP BY t.assigned_user_id, u.first_name 
+        ORDER BY total_weight DESC LIMIT 3;`;
+
+
+  const company_data = {
+    labels: ["Employee 1", "Employee 2", "Employee 3"],
+    datasets: [{
+      label: "Complete",
+      data: [85, 70, 43], // Sample complete task weights
+      backgroundColor: "green",
+      barThickness: 30
+    }, {
+      label: "In Progress",
+      data: [10, 23, 12], // Sample in progress task weights
+      backgroundColor: "orange",
+      barThickness: 30
+    }, {
+      label: "Not Started",
+      data: [10, 20, 10], // Sample not started task weights
+      backgroundColor: "red",
+      barThickness: 30
+    }]
+  };
+
+  // Configuration for the chart
+  const configure = {
+    type: 'bar',
+    data: company_data,
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Top Three Employees Task Breakdown'
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          title: {
+            display: true,
+            text: 'Employees'
+          }
+        },
+        y: {
+          stacked: true,
+          title: {
+            display: true,
+            text: 'Task Weight'
+          },
+          min: 0
+        }
+      }
+    }
+  };
   try {
     // query the database
+    
     let queryData = await execute_sql_query(sql_query);
-    if (queryData.length > 0){
-      sampleData = queryData.map(row => ['User ' + row["assigned_user_id"], row["total_weight"]]);
-    } 
-    console.log("top_employees_request has waited for sql query and got back this many rows", queryData.length);
-    return {'title': title, 'sampleData': sampleData};
+    company_data["labels"] = [];
+    let query2 = ``;
+    for (let i = 0; i < queryData.length; i++){
+      company_data["labels"].push(queryData[i]["first_name"]);
+      // completed tasks for that user in the past month
+     query2 += `SELECT COUNT(*) as num_tasks  FROM task   LEFT JOIN task_start ON task.id = task_start.task_id   WHERE task_start.task_id IS NULL AND  deadline > STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') AND assigned_user_id = ${queryData[i]["assigned_user_id"]}`;
+     // in progress tasks for that user
+     query2 += ` UNION ALL SELECT COUNT(*) as num_tasks  FROM task   INNER JOIN task_start ON task.id = task_start.task_id   LEFT JOIN task_complete ON task.id = task_complete.task_id   WHERE task_complete.task_id IS NULL AND deadline > STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') AND assigned_user_id = ${queryData[i]["assigned_user_id"]};`;
+     // completed tasks
+     query2 += ` UNION ALL SELECT COUNT(*) AS num_tasks  FROM task   INNER JOIN task_complete ON task.id = task_complete.task_id   WHERE deadline > STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') AND assigned_user_id = ${queryData[i]["assigned_user_id"]}`;
+    }
+    query2 += ";";
+    
+    try {
+          queryData2 = await execute_sql_query(query2);
+          company_data["datasets"][0]["data"] = [];
+          company_data["datasets"][1]["data"] = [];
+          company_data["datasets"][2]["data"] = [];
+          for (let j = 0; j < queryData2.length; j ++){
+                if (j % 3 == 0){
+                      // complete info
+                      company_data["datasets"][0]["data"].push(queryData2[j]["num_tasks"]);
+                }
+                if (j % 3 == 1){
+                      // in progress info
+                      company_data["datasets"][1]["data"].push(queryData2[j]["num_tasks"]);
+                }
+                if (j % 3 == 2){
+                      // not started info
+                      company_data["datasets"][2]["data"].push(queryData2[j]["num_tasks"]);
+                }
+          }
+    } catch (error){console.error('Error executing SQL query:', error);}
+    return {'title': title, 'sampleData': configure};
   } catch (error) {
     console.error('Error executing SQL query:', error);
     // Handle the error here
