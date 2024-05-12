@@ -6,7 +6,6 @@ const dataChartDict = {
       'performance-percent': 'stat',
       'deadlines-met': 'progress bar',
       'top-employees': 'stacked bar',
-      'top-projects': 'stacked bar',
       'weekly-completion': 'line'
 };
 
@@ -243,6 +242,5 @@ module.exports = {
       performance_percent_request,
       deadlines_met_request,
       top_employees_request,
-      top_projects_request, 
       weekly_completion_request
 };
