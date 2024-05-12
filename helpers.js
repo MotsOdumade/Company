@@ -127,14 +127,15 @@ async function performance_percent_request(){
   try {
     // query the database
     let queryData = await execute_sql_query(sql_query);
-    if (queryData.length > 0){
-      sampleData = queryData[0]["percentage_increase"];
+    console.log("Query data:", queryData); // Log the query data
+    if (queryData && queryData.length > 0){
+        sampleData = queryData[0]["percentage_increase"];
     } 
     return {'title': title, 'sampleData': sampleData};
-  } catch (error) {
-    console.error('Error executing SQL query:', error);
-    // Handle the error here
-  }
+    } catch (error) {
+          console.error('Error executing SQL query:', error);
+          // Handle the error here
+     }
 }
 
 async function deadlines_met_request(targetId){
