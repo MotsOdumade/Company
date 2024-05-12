@@ -109,7 +109,7 @@ async function performance_percent_request(){
   let sampleData = 25;
   // sql query here, e.g.
       
-  let sql_query = `SELECT 
+  let sql_query = "SELECT 
           CASE 
               WHEN previous_month_count = 0 THEN NULL -- Handle division by zero
               ELSE ((current_month_count - previous_month_count) / previous_month_count) * 100
@@ -122,8 +122,7 @@ async function performance_percent_request(){
           WHERE 
               (YEAR(complete_date) = YEAR(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s')) AND MONTH(complete_date) = MONTH(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s'))) OR
               (YEAR(complete_date) = YEAR(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') - INTERVAL 1 MONTH) AND MONTH(complete_date) = MONTH(STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') - INTERVAL 1 MONTH))
-      ) AS counts;
-      `;   
+      ) AS counts;";   
       console.log("company analytics sql query: ", sql_query );
   try {
     // query the database
