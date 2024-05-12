@@ -46,7 +46,7 @@ function execute_sql_query(sql_query){
               });
 
             // Log the formatted results
-              console.log(formattedResults);
+             // console.log(formattedResults);
 
               // Close the connection
               connection.end();
