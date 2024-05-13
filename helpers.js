@@ -128,7 +128,7 @@ async function performance_percent_request() {
         let queryData = await execute_sql_query(sql_query);
         console.log("Query data:", queryData); // Log the query data
         if (queryData && queryData.length > 0) {
-            sampleData = queryData[0]["percentage_increase"];
+            // sampleData = queryData[0]["percentage_increase"];
         } 
         console.log("Sample data:", sampleData); // Log the updated sampleData value
         return {'title': title, 'sampleData': sampleData};
@@ -203,7 +203,7 @@ async function top_employees_request(){
   // Configuration for the chart
   const configure = {
     type: 'bar',
-    data: company_data,
+    data: dummy_data,
     options: {
       responsive: true,
       plugins: {
@@ -231,6 +231,7 @@ async function top_employees_request(){
       }
     }
   };
+company_data = dummy_data;
   try {
     // query the database
     
