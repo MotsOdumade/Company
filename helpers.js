@@ -343,7 +343,7 @@ ORDER BY
         y: {
           title: {
             display: true,
-            text: 'Completion Percentage'
+            text: 'Total Task Weight Completed'
           },
           min: 0,
           max: 100,
