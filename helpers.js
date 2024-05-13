@@ -247,7 +247,6 @@ async function top_employees_request(){
                 query2 += ` UNION ALL SELECT COUNT(*) as num_tasks  FROM task   LEFT JOIN task_start ON task.id = task_start.task_id   WHERE task_start.task_id IS NULL AND  deadline > STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') AND assigned_user_id = ${queryData[i]["assigned_user_id"]}`;
      
           }
-     query2 += `SELECT COUNT(*) as num_tasks  FROM task   LEFT JOIN task_start ON task.id = task_start.task_id   WHERE task_start.task_id IS NULL AND  deadline > STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') AND assigned_user_id = ${queryData[i]["assigned_user_id"]}`;
      // in progress tasks for that user
      query2 += ` UNION ALL SELECT COUNT(*) as num_tasks  FROM task   INNER JOIN task_start ON task.id = task_start.task_id   LEFT JOIN task_complete ON task.id = task_complete.task_id   WHERE task_complete.task_id IS NULL AND deadline > STR_TO_DATE('2024-05-17 13:42:04', '%Y-%m-%d %H:%i:%s') AND assigned_user_id = ${queryData[i]["assigned_user_id"]}`;
      // completed tasks
