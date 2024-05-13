@@ -180,7 +180,7 @@ async function top_employees_request(){
         ORDER BY total_weight DESC LIMIT 3;`;
 
 
-  const company_data = {
+  const dummy_data = {
     labels: ["Employee 1", "Employee 2", "Employee 3"],
     datasets: [{
       label: "Complete",
@@ -231,7 +231,7 @@ async function top_employees_request(){
       }
     }
   };
-company_data = dummy_data;
+let company_data = dummy_data;
   try {
     // query the database
     
