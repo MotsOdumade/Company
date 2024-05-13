@@ -311,14 +311,60 @@ GROUP BY
 ORDER BY
     FIELD(label.week_label, '5 weeks ago', '4 weeks ago', '3 weeks ago', '2 weeks ago', 'last week');`;
   let sampleData = [];
+        const data = {
+    labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"],
+    datasets: [{
+      label: "Task Weight Completed",
+      data: [20, 40, 60, 80, 100], // Sample completion percentages for each week
+      borderColor: "blue",
+      fill: false
+    }]
+  };
+
+  // Configuration for the chart
+  const config = {
+    type: 'line',
+    data: data,
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Task Weight Completion by Week'
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Weeks'
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Completion Percentage'
+          },
+          min: 0,
+          max: 100,
+          ticks: {
+            stepSize: 10
+          }
+        }
+      }
+    },
+  };
   try {
     // query the database
     let queryData = await execute_sql_query(sql_query);
     if (queryData.length > 0){
-      sampleData = queryData.map(row => [row["week_label"], row["total_weight_completed"]]);
+      data["datasets"][0]["data"] = [];
     } 
+    for (let i = 0; i < queryData.length; i++){
+      data["datasets"][0]["data"].push(queryData[i]["total_weight_completed"]);
+    }
     console.log("weekly_completion_request has waited for sql query and got back this many rows", queryData.length);
-    return {'title': title, 'sampleData': sampleData};
+    return {'title': title, 'sampleData': config};
   } catch (error) {
     console.error('Error executing SQL query:', error);
     // Handle the error here
