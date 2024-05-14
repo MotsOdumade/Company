@@ -358,13 +358,16 @@ ORDER BY
   try {
     // query the database
     let queryData = await execute_sql_query(sql_query);
+      /*
     if (queryData.length > 0){
       data["datasets"][0]["data"] = [];
     } 
     for (let i = 0; i < queryData.length; i++){
       data["datasets"][0]["data"].push(queryData[i]["total_weight_completed"]);
     }
+    
     console.log("weekly_completion_request has waited for sql query and got back this many rows", queryData.length);
+    */
     return {'title': title, 'sampleData': config};
   } catch (error) {
     console.error('Error executing SQL query:', error);
